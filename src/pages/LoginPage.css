@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined');
+
+.corral-login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: #f8f9ff; font-family: Inter, sans-serif; color: #121c2a; }
+.corral-login-shell { width: min(1280px, 100%); min-height: 640px; display: grid; grid-template-columns: 7fr 5fr; overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 20px 45px rgba(20,40,30,.12); }
+.corral-login-panel { padding: 44px 48px; display: flex; flex-direction: column; justify-content: space-between; }
+.corral-brand { display: flex; align-items: center; gap: 12px; }
+.corral-brand-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; background: #166534; color: white; }
+.corral-brand strong, .corral-brand span { display: block; }
+.corral-brand strong { font-size: 18px; }
+.corral-brand span { margin-top: 2px; color: #707a6f; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.corral-heading { margin-top: 34px; }
+.corral-heading h1 { margin: 0; font-size: 32px; line-height: 1.2; }
+.corral-heading p { margin: 7px 0 0; color: #4b5563; font-size: 14px; }
+.corral-tabs { width: min(430px, 100%); margin-top: 26px; padding: 4px; display: flex; gap: 4px; background: #eff4ff; border-radius: 10px; }
+.corral-tabs button { flex: 1; border: 0; background: transparent; color: #707a6f; padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 7px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.corral-tabs button.active { background: #fff; color: #121c2a; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
+.corral-tabs .material-symbols-outlined { font-size: 18px; color: #166534; }
+.corral-form { margin-top: 24px; display: grid; gap: 16px; }
+.corral-form > label { display: grid; gap: 7px; font-size: 12px; font-weight: 600; }
+.corral-input-wrap { height: 46px; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #d7ded7; border-radius: 9px; }
+.corral-input-wrap:focus-within { border-color: #166534; box-shadow: 0 0 0 3px rgba(22,101,52,.12); }
+.corral-input-wrap > .material-symbols-outlined { position: absolute; left: 13px; color: #707a6f; font-size: 20px; }
+.corral-input-wrap input { width: 100%; height: 100%; border: 0; outline: 0; background: transparent; padding: 0 44px; font: inherit; font-size: 14px; color: #121c2a; }
+.corral-input-wrap input::placeholder { color: #8b958b; }
+.corral-eye { position: absolute; right: 7px; display: grid; place-items: center; border: 0; background: transparent; color: #707a6f; cursor: pointer; }
+.corral-phone-input input { padding-left: 58px; }
+.corral-prefix { position: absolute; left: 14px; color: #707a6f; font-size: 12px; font-weight: 700; }
+.corral-form small { color: #707a6f; font-size: 11px; font-weight: 400; }
+.corral-options { display: flex; align-items: center; justify-content: space-between; gap: 14px; font-size: 12px; }
+.corral-options a, .corral-register a { color: #904d00; font-weight: 600; text-decoration: none; }
+.corral-check { display: flex; align-items: center; gap: 8px; color: #4b5563; }
+.corral-check input { accent-color: #166534; }
+.corral-error { margin: 0; padding: 9px 11px; border-radius: 8px; background: #ffdad6; color: #93000a; font-size: 12px; }
+.corral-submit { height: 48px; border: 0; border-radius: 9px; background: #166534; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.corral-submit:hover { background: #14532d; }
+.corral-submit:disabled { opacity: .65; cursor: wait; }
+.corral-divider { margin: 24px 0; display: flex; align-items: center; gap: 12px; color: #707a6f; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.corral-divider::before, .corral-divider::after { content: ''; flex: 1; height: 1px; background: #dee9fc; }
+.corral-social-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.corral-social-buttons button { height: 44px; border: 0; border-radius: 9px; background: #eff4ff; color: #121c2a; font-weight: 600; cursor: pointer; }
+.corral-register { text-align: center; color: #4b5563; font-size: 12px; margin: 22px 0 0; }
+.corral-trust { margin-top: 30px; padding: 13px; border-radius: 10px; background: #eff4ff; display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; font-size: 11px; font-weight: 700; }
+.corral-trust > span { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.corral-trust .material-symbols-outlined { font-size: 17px; color: #166534; }
+.corral-photo-panel { position: relative; min-height: 640px; background: #166534 url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU3FjBgHRor3v00n8BoqLzTPAak0Mp7XfnoUK1ot_NjySbLnMbgcKAYlMimlvKStmNPTpMSSQhiR0ymQaxVRX7VY372YG9g6dC68nbzR289FlRIgr9F8Xs0xdXJMnr8lvWMjL8iJLf5SLK5_vlpSFkIQILsBhihHEuIN_18ZnQlDrIU6z3ICP30VlKb7bwcsikzwxO8E4F08q9TRAeC1VCx-yGLS_xETW4t5GNyIcAcWDtlNxK5tI_') center/cover no-repeat; }
+.corral-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,76,34,.98), rgba(0,76,34,.63), rgba(0,76,34,.28)); }
+.corral-photo-content { position: relative; z-index: 1; min-height: 100%; padding: 42px; display: flex; flex-direction: column; color: white; }
+.corral-live-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.corral-live-badge { padding: 7px 10px; border-radius: 999px; background: rgba(255,255,255,.16); backdrop-filter: blur(6px); display: flex; align-items: center; gap: 7px; }
+.corral-live-badge i { width: 8px; height: 8px; background: #a6f4b5; border-radius: 50%; }
+.corral-metrics { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.corral-metrics > div { padding: 14px; border-radius: 10px; background: rgba(255,255,255,.15); backdrop-filter: blur(7px); }
+.corral-metrics .wide { grid-column: 1 / -1; }
+.corral-metrics strong, .corral-metrics span { display: block; }
+.corral-metrics strong { font-size: 18px; }
+.corral-metrics span { margin-top: 4px; color: rgba(255,255,255,.8); font-size: 11px; }
+.corral-photo-panel blockquote { margin: 18px 0 0; padding: 18px; background: rgba(255,255,255,.15); backdrop-filter: blur(7px); border-radius: 10px; font-size: 13px; font-style: italic; line-height: 1.55; }
+.corral-photo-panel blockquote footer { margin-top: 12px; font-style: normal; font-size: 11px; font-weight: 700; }
+.corral-side-footer { margin-top: 22px; display: flex; justify-content: space-between; gap: 10px; color: rgba(255,255,255,.7); font-size: 10px; }
+@media (max-width: 960px) { .corral-login-shell { grid-template-columns: 1fr; } .corral-photo-panel { display: none; } }
+@media (max-width: 620px) { .corral-login-page { padding: 0; } .corral-login-shell { min-height: 100vh; border-radius: 0; } .corral-login-panel { padding: 28px 20px; } .corral-heading h1 { font-size: 25px; } .corral-options { align-items: flex-start; flex-direction: column; } .corral-social-buttons { grid-template-columns: 1fr; } .corral-trust { grid-template-columns: 1fr; } }
