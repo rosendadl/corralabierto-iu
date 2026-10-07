@@ -87,7 +87,7 @@
     background-position: center;
     overflow: hidden;
 }
-.login-visual {
+.register-visual {
     background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCnxg5LysDB2qnt3sVQFR22OhL0qmkYIEOoEcax9MXca9o0nnCFW_fzORP-GKLCpfwNwNemmFE4QQID0GPBzN8TVI13P00K_7JSehnB2jrMJZL5x5AjVTMez-eSB1_qiNa3L1a6Dpy9O3V8wwDH0bqEftDStytv8Z95W2ct5m7zu4hcTCjKfRVpdiDiWsUaULDU7DMXs8Id8hLW9QrLD9vY842irNhKSuUYJkQlsB6dER8aiVVrwES_');
 }
 .visual-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,28,16,.05), rgba(7,28,16,.78)); }
