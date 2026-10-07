@@ -1,9 +1,10 @@
-import { useState, type FormEvent } from 'react'
+import { useState } from 'react'
 // import { Link } from 'react-router'
 import { useAuth } from '../auth/AuthContext.tsx'
 import logo from '../assets/corral-abierto-logo.png'
 import './RegisterPage.css'
 import { Link, useNavigate } from "react-router";
+
 
 
 export default function RegisterPage() {

@@ -1,4 +1,5 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/AuthContext";
 import "./ProfileSetupPage.css";
@@ -202,6 +203,6 @@ export default function ProfileSetupPage() {
     );
 }
 
-function Field({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
+function Field({ label, children, className = "" }: { label: string; children: ReactNode; className?: string }) {
     return <label className={`field ${className}`}><span>{label}</span>{children}</label>;
 }

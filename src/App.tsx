@@ -26,17 +26,18 @@ const adminLinks = [
 export default function App() {
     return (
         <Routes>
+
             <Route element={<PublicOnly />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
             </Route>
 
-            <Route element={<RequireRole role="USER" />}>
-                <Route
-                    path="/user/profile-setup"
-                    element={<ProfileSetupPage />}
-                />
+            <Route
+                path="/user/profile-setup"
+                element={<ProfileSetupPage />}
+            />
 
+            <Route element={<RequireRole role="USER" />}>
                 <Route path="/user" element={<UserHome />} />
 
                 <Route element={<Layout links={userLinks} />}>
