@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import "./UserHome.css";
 import logo from "../../assets/corral-abierto-logo.png";
+import { useAuth } from "../../auth/AuthContext.tsx";
+import { canBuy, canSell, displayName, initials, loadProfile, modeLabel, type LocalProfile } from "../../profileStore.ts";
 
 const animals = [
     {
@@ -103,11 +105,26 @@ const animals = [
 ];
 
 export default function UserHome() {
+    const { user } = useAuth();
+    const [profile, setProfile] = useState<LocalProfile | null>(() => loadProfile(user?.username));
     const [species, setSpecies] = useState("Todos");
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("recent");
     const [minPrice, setMinPrice] = useState(1400);
     const [maxPrice, setMaxPrice] = useState(48000);
+
+
+    useEffect(() => {
+        const refresh = () => setProfile(loadProfile(user?.username));
+        refresh();
+        window.addEventListener("corral-profile-updated", refresh);
+        return () => window.removeEventListener("corral-profile-updated", refresh);
+    }, [user?.username]);
+
+    const userDisplayName = displayName(profile, user?.username);
+    const userInitials = initials(profile, user?.username);
+    const sellerMode = canSell(profile?.tradeMode);
+    const buyerMode = canBuy(profile?.tradeMode);
 
     const filteredAnimals = useMemo(() => {
         let result = animals.filter((animal) => {
@@ -134,21 +151,21 @@ export default function UserHome() {
 
                     <nav className="main-nav">
                         <Link to="/user" className="active">Catálogo</Link>
-                        <Link to="/user/publicaciones">Mis Publicaciones</Link>
-                        <Link to="/user/solicitudes">Solicitudes</Link>
-                        <Link to="/user/vendedores">Vendedores</Link>
+                        {sellerMode && <Link to="/user/publicaciones">Mis Publicaciones</Link>}
+                        {buyerMode && <Link to="/user/compras">Mis Compras</Link>}
+                        <Link to="/user/profile">Mi Perfil</Link>
                     </nav>
 
                     <div className="header-actions">
-                        <Link className="publish-btn" to="/user/publicar">＋ Publicar Animal</Link>
+                        {sellerMode && <Link className="publish-btn" to="/user/publicar">＋ Publicar Animal</Link>}
                         <button className="icon-btn" aria-label="Notificaciones">🔔<span>2</span></button>
-                        <div className="profile-chip">
-                            <div className="avatar">HR</div>
+                        <Link className="profile-chip" to="/user/profile" aria-label="Abrir perfil">
+                            <div className="avatar">{userInitials}</div>
                             <div>
-                                <strong>Don Heriberto Ramos</strong>
-                                <small>Rancho El Fresno</small>
+                                <strong>{userDisplayName}</strong>
+                                <small>{modeLabel(profile?.tradeMode)}</small>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </header>

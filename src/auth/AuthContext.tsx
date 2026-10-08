@@ -38,16 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveToken(res.accessToken)
   }
 
+  // Register only creates the account. RegisterPage explicitly logs in afterwards,
+  // so the registration -> profile setup -> home flow is easy to follow.
   async function register(username: string, password: string) {
     await api('/api/auth/register', { method: 'POST', body: { username, password } })
-    await login(username, password)
   }
 
   function logout() {
     saveToken(null)
   }
 
-  // For protected endpoints: adds the token, and logs out if the backend rejects it.
   async function authFetch<T>(path: string) {
     try {
       return await api<T>(path, { token })
@@ -57,18 +57,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Log out automatically when the token expires.
   const expiresAt = claims?.exp
   useEffect(() => {
     if (!expiresAt) return
-    const id = setTimeout(() => saveToken(null), expiresAt * 1000 - Date.now())
+    const delay = Math.max(0, expiresAt * 1000 - Date.now())
+    const id = setTimeout(() => saveToken(null), delay)
     return () => clearTimeout(id)
   }, [expiresAt])
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, authFetch }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ user, login, register, logout, authFetch }}>
+        {children}
+      </AuthContext.Provider>
   )
 }
 

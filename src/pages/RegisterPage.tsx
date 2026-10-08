@@ -1,14 +1,14 @@
 import { useState } from 'react'
-// import { Link } from 'react-router'
 import { useAuth } from '../auth/AuthContext.tsx'
 import logo from '../assets/corral-abierto-logo.png'
 import './RegisterPage.css'
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from 'react-router'
+import { savePendingRegistration } from '../profileStore.ts'
 
 
 
 export default function RegisterPage() {
-  const { register } = useAuth()
+  const { register, login } = useAuth()
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -19,58 +19,39 @@ export default function RegisterPage() {
   const navigate = useNavigate()
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!email || !username || !password || !confirmPassword) {
-      setError("Completa todos los campos");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
-
-    try {
-      console.log("antes de register")
-
-      await register(username, password)
-
-      console.log("registro exitoso")
-
-      navigate("/user/profile-setup")
-      //await register(username, password);
-      //navigate("/user/profile-setup");
-
-    } catch {
-      setError("No se pudo crear la cuenta");
-      setLoading(false)
-    }
-  }
-
-  /*
-  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError('')
 
+    if (!email || !username || !password || !confirmPassword) {
+      setError('Completa todos los campos')
+      return
+    }
+
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.')
+      setError('Las contraseñas no coinciden')
       return
     }
 
     setLoading(true)
     try {
-      // Tu backend actual solo recibe username + password.
-      // El correo ya se captura en la interfaz para conectarlo cuando el endpoint lo soporte.
       await register(username, password)
-      navigate("/user/profile-setup")
+
+      // Guardamos correo + usuario para precargar el setup, ya que el backend
+      // de registro todavía solo recibe username y password.
+      savePendingRegistration({ username, email })
+
+      // Inicia sesión inmediatamente para que al terminar el setup pueda ir al home.
+      await login(username, password)
+
+      navigate('/user/profile-setup')
     } catch (err) {
       setError((err as Error).message || 'No se pudo crear la cuenta')
+    } finally {
       setLoading(false)
     }
   }
-*/
+
+
   return (
       <main className="auth-shell">
         <section className="auth-panel">
