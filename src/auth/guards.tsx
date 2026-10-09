@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router'
 import type { Role } from '../types.ts'
+import { isProfileComplete, loadProfile } from '../profileStore.ts'
 import { useAuth } from './AuthContext.tsx'
 
 export function homeFor(role: Role) {
@@ -11,6 +12,20 @@ export function RequireRole({ role }: { role: Role }) {
 
   if (!user) return <Navigate to="/login" replace />
   if (user.role !== role) return <Navigate to={homeFor(user.role)} replace />
+  return <Outlet />
+}
+
+export function RequireCompleteProfile() {
+  const { user } = useAuth()
+
+  if (!user) return <Navigate to="/login" replace />
+  if (user.role !== 'USER') return <Outlet />
+
+  const profile = loadProfile(user.username)
+  if (!isProfileComplete(profile)) {
+    return <Navigate to="/user/profile-setup" replace />
+  }
+
   return <Outlet />
 }
 

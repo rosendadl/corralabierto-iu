@@ -1,5 +1,6 @@
 export type TradeMode = 'comprador' | 'vendedor' | 'ambos'
 export type Facility = 'rancho' | 'oficina' | 'particular'
+export type Gender = 'mujer' | 'hombre' | 'otro' | 'prefiero_no_decir'
 
 export interface LocalProfile {
   username: string
@@ -7,6 +8,7 @@ export interface LocalProfile {
   firstName: string
   lastName: string
   phone: string
+  gender: Gender | ''
   tradeMode: TradeMode
   facility: Facility
   address: string
@@ -35,7 +37,27 @@ export function loadProfile(username?: string | null): LocalProfile | null {
   if (!username) return null
   try {
     const raw = localStorage.getItem(profileKey(username))
-    return raw ? (JSON.parse(raw) as LocalProfile) : null
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<LocalProfile>
+
+    return {
+      username: parsed.username || username,
+      email: parsed.email || '',
+      firstName: parsed.firstName || '',
+      lastName: parsed.lastName || '',
+      phone: parsed.phone || '',
+      gender: parsed.gender || '',
+      tradeMode: parsed.tradeMode || 'ambos',
+      facility: parsed.facility || 'particular',
+      address: parsed.address || '',
+      postalCode: parsed.postalCode || '',
+      locality: parsed.locality || '',
+      municipality: parsed.municipality || '',
+      state: parsed.state || '',
+      avatar: parsed.avatar,
+      catalogVisible: parsed.catalogVisible ?? true,
+      emailNotifications: parsed.emailNotifications ?? true,
+    }
   } catch {
     return null
   }
@@ -63,6 +85,20 @@ export function clearPendingRegistration() {
   sessionStorage.removeItem(PENDING_KEY)
 }
 
+export function isProfileComplete(profile: LocalProfile | null) {
+  if (!profile) return false
+
+  return [
+    profile.firstName,
+    profile.lastName,
+    profile.phone,
+    profile.municipality,
+    profile.state,
+    profile.gender,
+    profile.address,
+  ].every((value) => Boolean(value?.trim()))
+}
+
 export function displayName(profile: LocalProfile | null, username?: string | null) {
   const full = [profile?.firstName, profile?.lastName].filter(Boolean).join(' ').trim()
   return full || username || 'Usuario'
@@ -81,6 +117,14 @@ export function modeLabel(mode?: TradeMode) {
   if (mode === 'comprador') return 'Comprador'
   if (mode === 'vendedor') return 'Vendedor'
   return 'Comprador y vendedor'
+}
+
+export function genderLabel(gender?: Gender | '') {
+  if (gender === 'mujer') return 'Mujer'
+  if (gender === 'hombre') return 'Hombre'
+  if (gender === 'otro') return 'Otro'
+  if (gender === 'prefiero_no_decir') return 'Prefiero no decir'
+  return 'No configurado'
 }
 
 export function canBuy(mode?: TradeMode) {

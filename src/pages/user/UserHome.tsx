@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import "./UserHome.css";
 import logo from "../../assets/corral-abierto-logo.png";
 import { useAuth } from "../../auth/AuthContext.tsx";
+import NotificationsPopover from "../../components/NotificationsPopover.tsx";
 import { canBuy, canSell, displayName, initials, loadProfile, modeLabel, type LocalProfile } from "../../profileStore.ts";
 
 const animals = [
@@ -158,7 +159,7 @@ export default function UserHome() {
 
                     <div className="header-actions">
                         {sellerMode && <Link className="publish-btn" to="/user/publicar">＋ Publicar Animal</Link>}
-                        <button className="icon-btn" aria-label="Notificaciones">🔔<span>2</span></button>
+                        <NotificationsPopover />
                         <Link className="profile-chip" to="/user/profile" aria-label="Abrir perfil">
                             <div className="avatar">{userInitials}</div>
                             <div>

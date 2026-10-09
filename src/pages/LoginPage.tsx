@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      await login(username, password)
+      await login(username.trim(), password)
     } catch (err) {
       setError((err as Error).message || 'No se pudo iniciar sesión')
       setLoading(false)
@@ -27,77 +27,75 @@ export default function LoginPage() {
 
   return (
       <main className="auth-shell">
-        <section className="auth-panel">
-          <div className="auth-content">
+        <div className="auth-frame">
+          <section className="auth-brand-panel">
             <img className="auth-logo" src={logo} alt="Corral Abierto" />
-
-            <nav className="auth-tabs" aria-label="Acceso">
-              <Link className="auth-tab active" to="/login">Iniciar sesión</Link>
-              <Link className="auth-tab" to="/register">Crear cuenta</Link>
-            </nav>
-
-            <div className="auth-copy">
-              <h1>Bienvenido de vuelta</h1>
-              <p>Entra a tu cuenta para continuar en Corral Abierto.</p>
+            <div className="auth-brand-copy">
+              <span className="auth-kicker">MERCADO GANADERO</span>
+              <h2>Compra y vende ganado con una experiencia más clara.</h2>
+              <p>Encuentra productores, compara publicaciones y administra tu actividad desde una sola cuenta.</p>
             </div>
+          </section>
 
-            <form className="auth-form" onSubmit={handleSubmit}>
-              <div className="field-group">
-                <label htmlFor="username">Correo o usuario</label>
-                <input
-                    id="username"
-                    type="text"
-                    placeholder="Correo o usuario"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="username"
-                    required
-                    autoFocus
-                />
+          <section className="auth-panel">
+            <div className="auth-content">
+              <nav className="auth-tabs" aria-label="Acceso">
+                <Link className="auth-tab active" to="/login">Iniciar sesión</Link>
+                <Link className="auth-tab" to="/register">Crear cuenta</Link>
+              </nav>
+
+              <div className="auth-copy">
+                <span className="auth-form-kicker">BIENVENIDO</span>
+                <h1>Inicia sesión</h1>
+                <p>Continúa a tu cuenta de Corral Abierto.</p>
               </div>
 
-              <div className="field-group">
-                <div className="field-label-row">
-                  <label htmlFor="password">Contraseña</label>
-                  <button className="text-button" type="button">¿La olvidaste?</button>
-                </div>
-                <div className="password-field">
+              <form className="auth-form" onSubmit={handleSubmit}>
+                <div className="field-group">
+                  <label htmlFor="username">Correo o usuario</label>
                   <input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Tu contraseña"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      autoComplete="current-password"
+                      id="username"
+                      type="text"
+                      placeholder="Correo o usuario"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      autoComplete="username"
                       required
+                      autoFocus
                   />
-                  <button
-                      className="show-password"
-                      type="button"
-                      onClick={() => setShowPassword((value) => !value)}
-                  >
-                    {showPassword ? 'Ocultar' : 'Ver'}
-                  </button>
                 </div>
-              </div>
 
-              {error && <p className="form-error">{error}</p>}
+                <div className="field-group">
+                  <label htmlFor="password">Contraseña</label>
+                  <div className="password-field">
+                    <input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Tu contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
+                        required
+                    />
+                    <button
+                        className="show-password"
+                        type="button"
+                        onClick={() => setShowPassword((value) => !value)}
+                    >
+                      {showPassword ? 'Ocultar' : 'Ver'}
+                    </button>
+                  </div>
+                </div>
 
-              <button className="primary-button" type="submit" disabled={loading}>
-                {loading ? 'Ingresando...' : 'Iniciar sesión'}
-              </button>
-            </form>
-          </div>
-        </section>
+                {error && <p className="form-error">{error}</p>}
 
-        <aside className="auth-visual login-visual" aria-hidden="true">
-          <div className="visual-overlay" />
-          <div className="visual-copy">
-            <span className="visual-kicker">Mercado ganadero</span>
-            <h2>Compra, vende y conecta con productores de todo México.</h2>
-            <p>Una plataforma clara para encontrar ganado, publicar lotes y tratar directo.</p>
-          </div>
-        </aside>
+                <button className="primary-button" type="submit" disabled={loading}>
+                  {loading ? 'Ingresando...' : 'Iniciar sesión'}
+                </button>
+              </form>
+            </div>
+          </section>
+        </div>
       </main>
   )
 }
