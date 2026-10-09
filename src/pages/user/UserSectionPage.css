@@ -1,0 +1,70 @@
+.user-section-page {
+  min-height: 100vh;
+  background: #f8f3e8;
+  color: #2e241c;
+}
+
+.user-section-header {
+  min-height: 76px;
+  padding: 12px clamp(24px, 5vw, 72px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid rgba(59, 46, 34, 0.12);
+  background: rgba(248, 243, 232, 0.96);
+}
+
+.user-section-brand img {
+  display: block;
+  width: 112px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.user-section-back {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.user-section-main {
+  width: min(100% - 48px, 1100px);
+  margin: 0 auto;
+  padding: 72px 0;
+}
+
+.user-section-eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.76rem;
+  font-weight: 800;
+  opacity: 0.55;
+}
+
+.user-section-main h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.user-section-main > p:not(.user-section-eyebrow) {
+  max-width: 680px;
+  margin: 16px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.72;
+}
+
+.user-section-empty {
+  margin-top: 52px;
+  padding: 34px 0;
+  border-top: 1px solid rgba(59, 46, 34, 0.14);
+  border-bottom: 1px solid rgba(59, 46, 34, 0.14);
+  display: grid;
+  gap: 8px;
+}
+
+.user-section-empty span {
+  opacity: 0.65;
+}

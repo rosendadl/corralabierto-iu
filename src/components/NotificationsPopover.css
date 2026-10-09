@@ -1,0 +1,74 @@
+.notifications-root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notifications-trigger {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e3e8e2;
+  border-radius: 12px;
+  background: #fff;
+  color: #243229;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.notifications-trigger:hover,
+.notifications-trigger.active {
+  background: #eff7f1;
+  border-color: #c9ddcd;
+  color: #155d32;
+}
+
+.notifications-trigger:active { transform: scale(.97); }
+.notifications-trigger svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.notifications-popover {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(360px, calc(100vw - 28px));
+  background: #fff;
+  border: 1px solid #e5e9e4;
+  border-radius: 18px;
+  box-shadow: 0 22px 55px rgba(30, 46, 36, .16), 0 4px 14px rgba(30, 46, 36, .06);
+  overflow: hidden;
+}
+
+.notifications-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #edf0ed;
+}
+
+.notifications-head h3 { margin: 2px 0 0; font-size: 16px; color: #172019; }
+.notifications-eyebrow { font-size: 9px; font-weight: 800; letter-spacing: .11em; color: #7a847d; }
+.notifications-head button { border: 0; background: transparent; color: #7b857e; font-size: 24px; line-height: 1; cursor: pointer; padding: 0 2px; }
+
+.notifications-empty {
+  padding: 36px 28px 38px;
+  text-align: center;
+}
+
+.notifications-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 13px;
+  border-radius: 15px;
+  background: #eef6f0;
+  color: #176338;
+  display: grid;
+  place-items: center;
+}
+
+.notifications-empty-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.notifications-empty strong { display: block; font-size: 14px; color: #1d2820; }
+.notifications-empty p { margin: 7px auto 0; max-width: 255px; color: #6f7972; font-size: 12px; line-height: 1.55; }
