@@ -1,31 +1,13 @@
 import { Link } from 'react-router'
-import logo from '../../assets/corral-abierto-logo.png'
-import './UserSectionPage.css'
 
-type UserSectionPageProps = {
-  title: string
-  description: string
-}
-
-export default function UserSectionPage({ title, description }: UserSectionPageProps) {
+export default function UserSectionPage({ title, description }: { title: string; description: string }) {
   return (
-    <div className="user-section-page">
-      <header className="user-section-header">
-        <Link className="user-section-brand" to="/user" aria-label="Ir al inicio">
-          <img src={logo} alt="Corral Abierto" />
-        </Link>
-        <Link className="user-section-back" to="/user">← Volver al catálogo</Link>
-      </header>
-
-      <main className="user-section-main">
-        <p className="user-section-eyebrow">Corral Abierto</p>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        <div className="user-section-empty">
-          <strong>Esta sección todavía no tiene contenido.</strong>
-          <span>La ruta ya funciona y queda lista para conectar su funcionalidad después.</span>
-        </div>
-      </main>
-    </div>
+    <main style={{ minHeight: '100vh', background: '#f7f9fc', padding: '64px 20px', fontFamily: 'Inter, sans-serif' }}>
+      <section style={{ maxWidth: 760, margin: '0 auto', background: '#fff', border: '1px solid #e5e9ef', borderRadius: 16, padding: 28 }}>
+        <Link to="/user" style={{ color: '#166534', textDecoration: 'none', fontSize: 12, fontWeight: 700 }}>← Volver al catálogo</Link>
+        <h1 style={{ margin: '18px 0 7px' }}>{title}</h1>
+        <p style={{ margin: 0, color: '#6b7585' }}>{description}</p>
+      </section>
+    </main>
   )
 }

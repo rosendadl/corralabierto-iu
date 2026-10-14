@@ -185,7 +185,7 @@ export default function ProfileSetupPage() {
             </div>
 
             <div className="form-grid two-cols">
-              <Field label="Nombre(s) *"><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ej. Rosenda" /></Field>
+              <Field label="Nombre(s) *"><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ej. Ana" /></Field>
               <Field label="Apellidos *"><input required value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Apellidos" /></Field>
               <Field label="Teléfono de contacto *"><input required value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="(646) 000 0000" /></Field>
               <Field label="Género *">

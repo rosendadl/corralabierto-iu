@@ -113,7 +113,7 @@ export default function UserProfile() {
         <nav className="account-tabs" aria-label="Navegación de cuenta">
           <Link className="active" to="/user/profile">Mi perfil</Link>
           {seller && <Link to="/user/publicaciones">Mis publicaciones</Link>}
-          {seller && <Link to="/user/ventas">Ventas</Link>}
+          {seller && <Link to="/user/publicaciones#ventas">Ventas y liquidaciones</Link>}
           {buyer && <Link to="/user/compras">Mis compras</Link>}
           <Link to="/user/settings">Seguridad y ajustes</Link>
         </nav>
@@ -182,7 +182,7 @@ export default function UserProfile() {
 
             <section className="account-card">
               <div className="card-heading">
-                <div><h2>Privacidad y notificaciones</h2></div>
+                <div><h2>Privacidad y notificaciones</h2><p>Preferencias simples, sin SMS ni WhatsApp.</p></div>
                 <span className="card-icon">☷</span>
               </div>
 
