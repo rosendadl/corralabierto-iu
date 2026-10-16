@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router'
 import { PublicOnly, Redirect, RequireCompleteProfile, RequireRole } from './auth/guards.tsx'
-import Layout from './components/Layout.tsx'
 import LoginPage from './pages/LoginPage.tsx'
 import RegisterPage from './pages/RegisterPage.tsx'
 import UserHome from './pages/user/UserHome.tsx'
@@ -9,16 +8,15 @@ import UserSettings from './pages/user/UserSettings.tsx'
 import UserPublications from './pages/user/UserPublications.tsx'
 import PublishLotPage from './pages/user/PublishLotPage.tsx'
 import UserSectionPage from './pages/user/UserSectionPage.tsx'
-import AdminHome from './pages/admin/AdminHome.tsx'
-import AdminUsers from './pages/admin/AdminUsers.tsx'
-import AdminSettings from './pages/admin/AdminSettings.tsx'
 import ProfileSetupPage from './pages/user/ProfileSetupPage.tsx'
 
-const adminLinks = [
-  { to: '/admin', label: 'Home' },
-  { to: '/admin/users', label: 'Users' },
-  { to: '/admin/settings', label: 'Settings' },
-]
+import AdminLayout from './pages/admin/AdminLayout.tsx'
+import AdminHome from './pages/admin/AdminHome.tsx'
+import AdminUsers from './pages/admin/AdminUsers.tsx'
+import AdminPublications from './pages/admin/AdminPublications.tsx'
+import AdminReports from './pages/admin/AdminReports.tsx'
+import AdminCatalog from './pages/admin/AdminCatalog.tsx'
+import AdminSettings from './pages/admin/AdminSettings.tsx'
 
 export default function App() {
   return (
@@ -38,14 +36,25 @@ export default function App() {
           <Route path="/user/publicaciones" element={<UserPublications />} />
           <Route path="/user/publicar" element={<PublishLotPage />} />
           <Route path="/user/ventas" element={<Navigate to="/user/publicaciones#ventas" replace />} />
-          <Route path="/user/compras" element={<UserSectionPage title="Mis compras" description="Tus compras aparecerán aquí cuando implementemos ese flujo." />} />
+          <Route
+            path="/user/compras"
+            element={
+              <UserSectionPage
+                title="Mis compras"
+                description="Tus compras aparecerán aquí cuando implementemos ese flujo."
+              />
+            }
+          />
         </Route>
       </Route>
 
       <Route element={<RequireRole role="ADMIN" />}>
-        <Route path="/admin" element={<Layout links={adminLinks} />}>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminHome />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="publications" element={<AdminPublications />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="catalog" element={<AdminCatalog />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Route>
