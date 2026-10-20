@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { useAuth } from '../auth/AuthContext.tsx'
-import logo from '../assets/corral-abierto-logo.png'
-import { savePendingRegistration } from '../profileStore.ts'
+import { useAuth } from '../../auth/AuthContext.tsx'
+import logo from '../../assets/corral-abierto-logo.png'
+import { savePendingRegistration } from '../../profileStore.ts'
 import './RegisterPage.css'
 
 export default function RegisterPage() {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { ChangeEvent, FormEvent, ReactNode } from 'react'
 import { useNavigate } from 'react-router'
-import { useAuth } from '../../auth/AuthContext.tsx'
+import { useAuth } from '../../../auth/AuthContext.tsx'
 import {
   clearPendingRegistration,
   loadPendingRegistration,
@@ -10,7 +10,7 @@ import {
   type Facility,
   type Gender,
   type TradeMode,
-} from '../../profileStore.ts'
+} from '../../../profileStore.ts'
 import './ProfileSetupPage.css'
 
 export default function ProfileSetupPage() {

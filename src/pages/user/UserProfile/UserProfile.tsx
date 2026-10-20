@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import logo from '../../assets/corral-abierto-logo.png'
-import { useAuth } from '../../auth/AuthContext.tsx'
-import NotificationsPopover from '../../components/NotificationsPopover.tsx'
+import logo from '../../../assets/corral-abierto-logo.png'
+import { useAuth } from '../../../auth/AuthContext.tsx'
+import NotificationsPopover from '../../../components/NotificationsPopover.tsx'
 import {
   canBuy,
   canSell,
@@ -12,8 +12,8 @@ import {
   modeLabel,
   saveProfile,
   type LocalProfile,
-} from '../../profileStore.ts'
-import './UserAccount.css'
+} from '../../../profileStore.ts'
+import '../UserAccount/UserAccount.css'
 
 export default function UserProfile() {
   const { user, logout } = useAuth()

@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
-import logo from '../../assets/corral-abierto-logo.png'
-import { useAuth } from '../../auth/AuthContext.tsx'
-import NotificationsPopover from '../../components/NotificationsPopover.tsx'
-import { displayName, initials, loadProfile, modeLabel } from '../../profileStore.ts'
-import { savePublication, type SaleMode } from '../../publicationStore.ts'
+import logo from '../../../assets/corral-abierto-logo.png'
+import { useAuth } from '../../../auth/AuthContext.tsx'
+import NotificationsPopover from '../../../components/NotificationsPopover.tsx'
+import { displayName, initials, loadProfile, modeLabel } from '../../../profileStore.ts'
+import { savePublication, type SaleMode } from '../../../publicationStore.ts'
 import './PublishLotPage.css'
 
 export default function PublishLotPage() {

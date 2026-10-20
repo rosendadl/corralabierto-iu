@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import "./UserHome.css";
-import logo from "../../assets/corral-abierto-logo.png";
-import { useAuth } from "../../auth/AuthContext.tsx";
-import NotificationsPopover from "../../components/NotificationsPopover.tsx";
-import { canBuy, canSell, displayName, initials, loadProfile, modeLabel, type LocalProfile } from "../../profileStore.ts";
+import logo from "../../../assets/corral-abierto-logo.png";
+import { useAuth } from "../../../auth/AuthContext.tsx";
+import NotificationsPopover from "../../../components/NotificationsPopover.tsx";
+import { canBuy, canSell, displayName, initials, loadProfile, modeLabel, type LocalProfile } from "../../../profileStore.ts";
 
 const animals = [
     {

@@ -1,4 +1,4 @@
-import { EmptyState, PageHeading } from './AdminHome.tsx'
+import { EmptyState, PageHeading } from '../AdminHome/AdminHome.tsx'
 
 export default function AdminUsers() {
   return (

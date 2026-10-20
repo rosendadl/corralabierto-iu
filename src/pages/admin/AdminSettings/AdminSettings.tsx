@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useAuth } from '../../auth/AuthContext.tsx'
-import { PageHeading } from './AdminHome.tsx'
+import { useAuth } from '../../../auth/AuthContext.tsx'
+import { PageHeading } from '../AdminHome/AdminHome.tsx'
 
 type AdminAccountSettings = {
   firstName: string

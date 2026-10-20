@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router'
-import logo from '../../assets/corral-abierto-logo.png'
-import { useAuth } from '../../auth/AuthContext.tsx'
-import NotificationsPopover from '../../components/NotificationsPopover.tsx'
-import { displayName, initials, loadProfile, modeLabel, type LocalProfile } from '../../profileStore.ts'
-import { loadPublications, type LotPublication } from '../../publicationStore.ts'
+import logo from '../../../assets/corral-abierto-logo.png'
+import { useAuth } from '../../../auth/AuthContext.tsx'
+import NotificationsPopover from '../../../components/NotificationsPopover.tsx'
+import { displayName, initials, loadProfile, modeLabel, type LocalProfile } from '../../../profileStore.ts'
+import { loadPublications, type LotPublication } from '../../../publicationStore.ts'
 import './UserPublications.css'
 
 export default function UserPublications() {

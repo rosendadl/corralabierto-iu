@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { useMemo } from 'react'
-import { useAuth } from '../../auth/AuthContext.tsx'
-import NotificationsPopover from '../../components/NotificationsPopover.tsx'
+import { useAuth } from '../../../auth/AuthContext.tsx'
+import NotificationsPopover from '../../../components/NotificationsPopover.tsx'
 import './AdminLayout.css'
 
 const navItems = [

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
-import { useAuth } from '../auth/AuthContext.tsx'
-import logo from '../assets/corral-abierto-logo.png'
+import { useAuth } from '../../auth/AuthContext.tsx'
+import logo from '../../assets/corral-abierto-logo.png'
 import './LoginPage.css'
 
 export default function LoginPage() {
