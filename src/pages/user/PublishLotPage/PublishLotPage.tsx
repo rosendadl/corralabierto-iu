@@ -9,7 +9,7 @@ import { savePublication, type SaleMode } from '../../../publicationStore.ts'
 import './PublishLotPage.css'
 
 export default function PublishLotPage() {
-  const { user } = useAuth()
+  const { user, authFetch } = useAuth()
   const navigate = useNavigate()
   const profile = loadProfile(user?.username)
   const [title, setTitle] = useState('')
@@ -53,7 +53,7 @@ export default function PublishLotPage() {
     setPhotos(files)
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
 
@@ -72,26 +72,38 @@ export default function PublishLotPage() {
       return
     }
 
-    savePublication(user.username, {
-      title,
-      species,
-      breed,
-      category,
-      headCount: Number(headCount),
-      avgAgeMonths: avgAgeMonths ? Number(avgAgeMonths) : null,
-      state,
-      municipality,
-      vaccinated,
-      negativeTests,
-      vaccinesDetail,
-      testsDetail,
-      avgWeightKg: avgWeightKg ? Number(avgWeightKg) : null,
-      saleMode,
-      price: Number(price),
-      photoNames: photos.map((file) => file.name),
-    })
+    try {
+      await authFetch('/api/user/lots', {
+        method: 'POST',
+        body: {
+          title,
+          species,
+          breed,
+          category,
+          headCount: Number(headCount),
+          avgAgeMonths: avgAgeMonths ? Number(avgAgeMonths) : null,
+          state,
+          municipality,
+          vaccinated,
+          negativeTests,
+          vaccinesDetail,
+          testsDetail,
+          avgWeightKg: avgWeightKg ? Number(avgWeightKg) : null,
+          saleMode,
+          price: Number(price),
+          photoNames: photos.map((file) => file.name),
+        },
+      })
 
-    navigate('/user/publicaciones')
+      navigate('/user/publicaciones')
+    } catch (err) {
+      console.error('Error al publicar el lote:', err)
+      setError(
+          err instanceof Error
+              ? err.message
+              : 'No se pudo publicar el lote. Intenta de nuevo.'
+      )
+    }
   }
 
   return (
