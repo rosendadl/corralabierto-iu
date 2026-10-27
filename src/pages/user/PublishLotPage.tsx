@@ -5,11 +5,13 @@ import logo from '../../assets/corral-abierto-logo.png'
 import { useAuth } from '../../auth/AuthContext.tsx'
 import NotificationsPopover from '../../components/NotificationsPopover.tsx'
 import { displayName, initials, loadProfile, modeLabel } from '../../profileStore.ts'
-import { savePublication, type SaleMode } from '../../publicationStore.ts'
+import type { SaleMode } from '../../publicationStore.ts'
+import type { ApiLot } from '../../lotDetails.ts'
 import './PublishLotPage.css'
 
 export default function PublishLotPage() {
-  const { user } = useAuth()
+  const { user, authFetch } = useAuth()
+  const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
   const profile = loadProfile(user?.username)
   const [title, setTitle] = useState('')
@@ -53,7 +55,7 @@ export default function PublishLotPage() {
     setPhotos(files)
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
 
@@ -72,7 +74,8 @@ export default function PublishLotPage() {
       return
     }
 
-    savePublication(user.username, {
+    // Se guarda en el API (POST /api/user/lots) para que aparezca en el catálogo de todos.
+    const body = {
       title,
       species,
       breed,
@@ -89,86 +92,94 @@ export default function PublishLotPage() {
       saleMode,
       price: Number(price),
       photoNames: photos.map((file) => file.name),
-    })
+    }
 
-    navigate('/user/publicaciones')
+    setSubmitting(true)
+    try {
+      const created = await authFetch<ApiLot>('/api/user/lots', { method: 'POST', body })
+      navigate(`/user/lote/${created.id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo publicar el lote.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <div className="lot-page">
-      <header className="lot-header">
-        <div className="lot-header-inner">
-          <Link to="/user" className="lot-brand"><img src={logo} alt="Corral Abierto" /><span>Corral Abierto</span></Link>
-          <nav className="lot-nav"><Link to="/user">Catálogo</Link><Link to="/user/publicaciones">Mis Publicaciones</Link><Link to="/user/profile">Mi Perfil</Link></nav>
-          <div className="lot-header-actions"><NotificationsPopover /><Link className="lot-user-chip" to="/user/profile"><span className="lot-avatar">{avatarInitials}</span><span><strong>{name}</strong><small>{modeLabel(profile?.tradeMode)}</small></span></Link></div>
-        </div>
-      </header>
+      <div className="lot-page">
+        <header className="lot-header">
+          <div className="lot-header-inner">
+            <Link to="/user" className="lot-brand"><img src={logo} alt="Corral Abierto" /><span>Corral Abierto</span></Link>
+            <nav className="lot-nav"><Link to="/user">Catálogo</Link><Link to="/user/publicaciones">Mis Publicaciones</Link><Link to="/user/profile">Mi Perfil</Link></nav>
+            <div className="lot-header-actions"><NotificationsPopover /><Link className="lot-user-chip" to="/user/profile"><span className="lot-avatar">{avatarInitials}</span><span><strong>{name}</strong><small>{modeLabel(profile?.tradeMode)}</small></span></Link></div>
+          </div>
+        </header>
 
-      <main className="lot-main">
-        <div className="lot-breadcrumb"><Link to="/user/publicaciones">Mis publicaciones</Link><span>›</span><span>Publicar nuevo lote</span></div>
-        <section className="lot-title-row"><div><span className="lot-kicker">NUEVA PUBLICACIÓN</span><h1>Publicar nuevo lote</h1><p>Captura solo la información necesaria para mostrar tu lote en el catálogo.</p></div><Link className="lot-secondary" to="/user/publicaciones">Cancelar</Link></section>
+        <main className="lot-main">
+          <div className="lot-breadcrumb"><Link to="/user/publicaciones">Mis publicaciones</Link><span>›</span><span>Publicar nuevo lote</span></div>
+          <section className="lot-title-row"><div><span className="lot-kicker">NUEVA PUBLICACIÓN</span><h1>Publicar nuevo lote</h1><p>Captura solo la información necesaria para mostrar tu lote en el catálogo.</p></div><Link className="lot-secondary" to="/user/publicaciones">Cancelar</Link></section>
 
-        <form className="lot-form" onSubmit={handleSubmit}>
-          <FormSection number="1" title="Información del lote" description="Datos básicos que verá el comprador en el catálogo.">
-            <div className="lot-fields two">
-              <Field label="Título del lote" required wide><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ej. Lote de vaquillas Angus" /></Field>
-              <Field label="Especie" required><select value={species} onChange={(e) => setSpecies(e.target.value)}><option value="">Selecciona</option><option>Bovino</option><option>Ovino</option><option>Porcino</option><option>Caprino</option><option>Equino</option></select></Field>
-              <Field label="Raza" required><input value={breed} onChange={(e) => setBreed(e.target.value)} placeholder="Raza o cruzamiento" /></Field>
-              <Field label="Sexo / categoría" required><select value={category} onChange={(e) => setCategory(e.target.value)}><option value="">Selecciona</option><option>Hembras</option><option>Machos</option><option>Mixto</option><option>Sementales</option><option>Engorda</option><option>Cría</option></select></Field>
-              <Field label="Cantidad de cabezas" required><input type="number" min="1" value={headCount} onChange={(e) => setHeadCount(e.target.value)} placeholder="0" /></Field>
-              <Field label="Edad promedio (meses)"><input type="number" min="0" value={avgAgeMonths} onChange={(e) => setAvgAgeMonths(e.target.value)} placeholder="Opcional" /></Field>
-              <Field label="Estado de origen" required><input value={state} onChange={(e) => setState(e.target.value)} placeholder="Estado" /></Field>
-              <Field label="Municipio / ciudad" required><input value={municipality} onChange={(e) => setMunicipality(e.target.value)} placeholder="Municipio o ciudad" /></Field>
-            </div>
-          </FormSection>
+          <form className="lot-form" onSubmit={handleSubmit}>
+            <FormSection number="1" title="Información del lote" description="Datos básicos que verá el comprador en el catálogo.">
+              <div className="lot-fields two">
+                <Field label="Título del lote" required wide><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ej. Lote de vaquillas Angus" /></Field>
+                <Field label="Especie" required><select value={species} onChange={(e) => setSpecies(e.target.value)}><option value="">Selecciona</option><option>Bovino</option><option>Ovino</option><option>Porcino</option><option>Caprino</option><option>Equino</option></select></Field>
+                <Field label="Raza" required><input value={breed} onChange={(e) => setBreed(e.target.value)} placeholder="Raza o cruzamiento" /></Field>
+                <Field label="Sexo / categoría" required><select value={category} onChange={(e) => setCategory(e.target.value)}><option value="">Selecciona</option><option>Hembras</option><option>Machos</option><option>Mixto</option><option>Sementales</option><option>Engorda</option><option>Cría</option></select></Field>
+                <Field label="Cantidad de cabezas" required><input type="number" min="1" value={headCount} onChange={(e) => setHeadCount(e.target.value)} placeholder="0" /></Field>
+                <Field label="Edad promedio (meses)"><input type="number" min="0" value={avgAgeMonths} onChange={(e) => setAvgAgeMonths(e.target.value)} placeholder="Opcional" /></Field>
+                <Field label="Estado de origen" required><input value={state} onChange={(e) => setState(e.target.value)} placeholder="Estado" /></Field>
+                <Field label="Municipio / ciudad" required><input value={municipality} onChange={(e) => setMunicipality(e.target.value)} placeholder="Municipio o ciudad" /></Field>
+              </div>
+            </FormSection>
 
-          <FormSection number="2" title="Vacunas y pruebas de salud" description="Indica si el lote cuenta con vacunas y pruebas negativas de enfermedades.">
-            <div className="lot-health-grid">
-              <CheckCard checked={vaccinated} onChange={setVaccinated} title="Vacunas al día" description="El lote cuenta con vacunas aplicadas según su manejo." />
-              <CheckCard checked={negativeTests} onChange={setNegativeTests} title="Pruebas negativas" description="El lote cuenta con pruebas negativas de enfermedades." />
-            </div>
-            <div className="lot-fields two compact-top">
-              <Field label="Vacunas aplicadas"><input value={vaccinesDetail} onChange={(e) => setVaccinesDetail(e.target.value)} placeholder="Opcional" /></Field>
-              <Field label="Pruebas realizadas"><input value={testsDetail} onChange={(e) => setTestsDetail(e.target.value)} placeholder="Opcional" /></Field>
-            </div>
-          </FormSection>
+            <FormSection number="2" title="Vacunas y pruebas de salud" description="Indica si el lote cuenta con vacunas y pruebas negativas de enfermedades.">
+              <div className="lot-health-grid">
+                <CheckCard checked={vaccinated} onChange={setVaccinated} title="Vacunas al día" description="El lote cuenta con vacunas aplicadas según su manejo." />
+                <CheckCard checked={negativeTests} onChange={setNegativeTests} title="Pruebas negativas" description="El lote cuenta con pruebas negativas de enfermedades." />
+              </div>
+              <div className="lot-fields two compact-top">
+                <Field label="Vacunas aplicadas"><input value={vaccinesDetail} onChange={(e) => setVaccinesDetail(e.target.value)} placeholder="Opcional" /></Field>
+                <Field label="Pruebas realizadas"><input value={testsDetail} onChange={(e) => setTestsDetail(e.target.value)} placeholder="Opcional" /></Field>
+              </div>
+            </FormSection>
 
-          <FormSection number="3" title="Pesaje, modalidad de venta y precio" description="Define cómo se venderá el lote y el precio solicitado.">
-            <div className="lot-fields two">
-              <Field label="Peso promedio por cabeza (kg)"><input type="number" min="0" value={avgWeightKg} onChange={(e) => setAvgWeightKg(e.target.value)} placeholder="Opcional" /></Field>
-              <Field label="Peso total estimado"><div className="lot-readonly">{totalWeight ? `${totalWeight.toLocaleString('es-MX')} kg` : '—'}</div></Field>
-            </div>
+            <FormSection number="3" title="Pesaje, modalidad de venta y precio" description="Define cómo se venderá el lote y el precio solicitado.">
+              <div className="lot-fields two">
+                <Field label="Peso promedio por cabeza (kg)"><input type="number" min="0" value={avgWeightKg} onChange={(e) => setAvgWeightKg(e.target.value)} placeholder="Opcional" /></Field>
+                <Field label="Peso total estimado"><div className="lot-readonly">{totalWeight ? `${totalWeight.toLocaleString('es-MX')} kg` : '—'}</div></Field>
+              </div>
 
-            <div className="lot-sale-modes">
-              <ModeButton active={saleMode === 'kg'} onClick={() => setSaleMode('kg')} title="Precio por kg" />
-              <ModeButton active={saleMode === 'cabeza'} onClick={() => setSaleMode('cabeza')} title="Precio por cabeza" />
-              <ModeButton active={saleMode === 'lote'} onClick={() => setSaleMode('lote')} title="Precio por lote" />
-            </div>
+              <div className="lot-sale-modes">
+                <ModeButton active={saleMode === 'kg'} onClick={() => setSaleMode('kg')} title="Precio por kg" />
+                <ModeButton active={saleMode === 'cabeza'} onClick={() => setSaleMode('cabeza')} title="Precio por cabeza" />
+                <ModeButton active={saleMode === 'lote'} onClick={() => setSaleMode('lote')} title="Precio por lote" />
+              </div>
 
-            <div className="lot-price-row">
-              <Field label={saleMode === 'kg' ? 'Precio por kg (MXN)' : saleMode === 'cabeza' ? 'Precio por cabeza (MXN)' : 'Precio total del lote (MXN)'} required>
-                <input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0.00" />
-              </Field>
-              <div className="lot-total-card"><span>Total estimado</span><strong>{estimatedTotal ? `$${estimatedTotal.toLocaleString('es-MX', { maximumFractionDigits: 2 })}` : '$0'}</strong><small>MXN</small></div>
-            </div>
-          </FormSection>
+              <div className="lot-price-row">
+                <Field label={saleMode === 'kg' ? 'Precio por kg (MXN)' : saleMode === 'cabeza' ? 'Precio por cabeza (MXN)' : 'Precio total del lote (MXN)'} required>
+                  <input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0.00" />
+                </Field>
+                <div className="lot-total-card"><span>Total estimado</span><strong>{estimatedTotal ? `$${estimatedTotal.toLocaleString('es-MX', { maximumFractionDigits: 2 })}` : '$0'}</strong><small>MXN</small></div>
+              </div>
+            </FormSection>
 
-          <FormSection number="4" title="Galería de fotos" description="Sube fotografías del lote. No se aceptan videos.">
-            <label className="lot-upload">
-              <input type="file" accept="image/*" multiple onChange={handlePhotos} />
-              <span className="lot-upload-icon">＋</span>
-              <strong>Seleccionar fotos</strong>
-              <small>JPG, PNG o WEBP</small>
-            </label>
-            {photos.length > 0 && <div className="lot-photo-list">{photos.map((photo) => <span key={`${photo.name}-${photo.lastModified}`}>{photo.name}</span>)}</div>}
-          </FormSection>
+            <FormSection number="4" title="Galería de fotos" description="Sube fotografías del lote. No se aceptan videos.">
+              <label className="lot-upload">
+                <input type="file" accept="image/*" multiple onChange={handlePhotos} />
+                <span className="lot-upload-icon">＋</span>
+                <strong>Seleccionar fotos</strong>
+                <small>JPG, PNG o WEBP</small>
+              </label>
+              {photos.length > 0 && <div className="lot-photo-list">{photos.map((photo) => <span key={`${photo.name}-${photo.lastModified}`}>{photo.name}</span>)}</div>}
+            </FormSection>
 
-          {error && <div className="lot-error">{error}</div>}
+            {error && <div className="lot-error">{error}</div>}
 
-          <div className="lot-submit-row"><span>Los campos marcados con * son obligatorios.</span><button type="submit">Publicar lote</button></div>
-        </form>
-      </main>
-    </div>
+            <div className="lot-submit-row"><span>Los campos marcados con * son obligatorios.</span><button type="submit" disabled={submitting}>{submitting ? 'Publicando…' : 'Publicar lote'}</button></div>
+          </form>
+        </main>
+      </div>
   )
 }
 

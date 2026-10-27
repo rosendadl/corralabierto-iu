@@ -1,118 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
-import "./UserHome.css";
+import { Link, useNavigate } from "react-router";
+import "../user/UserHome.css";
 import logo from "../../assets/corral-abierto-logo.png";
 import { useAuth } from "../../auth/AuthContext.tsx";
 import NotificationsPopover from "../../components/NotificationsPopover.tsx";
 import { canBuy, canSell, displayName, initials, loadProfile, modeLabel, type LocalProfile } from "../../profileStore.ts";
+import LotCard from "../../components/LotCard.tsx";
+import { useCatalog } from "../../useCatalog.ts";
+import { pricing, type LotDetail } from "../../lotDetails.ts";
 
-const animals = [
-    {
-        id: 1,
-        title: "Lote de 10 Borregos Dorper F1",
-        species: "Ovino",
-        age: "8 meses",
-        location: "Hermosillo, Sonora",
-        price: 3200,
-        unit: "MXN / cabeza",
-        seller: "Rancho Santa Elena",
-        rating: "4.9",
-        deals: "28 tratos",
-        badge: "Disponible (10 cabezas)",
-        extra: "Guía REEMO",
-        note: "Fierro: #EL-491",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB8VIK6PIcHnMEpJfUd8cEu5YC9lRbhXAIugNI1cP0yfK8adkS-3kaqUqBGvp-5YuD_jYZRLOILqYuFC-O0n7ah5dH_pGuuxWGhWtduUVACjGxAJRQRQYBwQGbQ71eC8WjWi4TP9Ky75BptqKi1EEP1b5BIrjDJk_ROzjzMPYkDRHrsxyQRy9Kc11RjArHl-ZOdDlRgc0Vt4n1s5gfQJnI7vfTr3IEw9reIxEdApmCBUUdXyYevxE5z",
-    },
-    {
-        id: 2,
-        title: "Toro Semental Simmental Registro Puro",
-        species: "Bovino",
-        age: "24 meses",
-        location: "Tepatitlán, Jal.",
-        price: 48000,
-        unit: "MXN",
-        seller: "Cabaña Los Pinos",
-        rating: "5.0",
-        deals: "14 tratos",
-        badge: "Disponible (1 cabeza)",
-        extra: "Pedigree Oficial",
-        note: "820 kg en báscula",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBRcaLqSNEfpUX8qcmcYaJWPuhvgJCB_zNUO2ub2euk5A8xJxrq1_BiDfxhcGFkPHU-Ypaqz7WJdubJi1LAv6hwttaFALEnbGHXiIjW_yB8jtmoBqKHdHH5MEV6PTWO_69qpws8WZaxF7kZDu1VhprJJXeYYbIs3DPKWsnj26qPkHyRA2lHnxedsVXUBWe3sR-oA5VMp3hAHH5dShLhaVcVwYDFWNCXLT_kmAIreQhs0FETNRuu10yA",
-    },
-    {
-        id: 3,
-        title: "Lote 25 Vaquillas Angus Negro preñadas",
-        species: "Bovino",
-        age: "18 meses",
-        location: "Chihuahua, Chih.",
-        price: 28500,
-        unit: "MXN / cab.",
-        seller: "Ganadera Del Norte",
-        rating: "",
-        deals: "En proceso de anticipo",
-        badge: "Reservada",
-        extra: "25 cabezas",
-        note: "",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDp1l66iX6IIa2_7Lq2x0VHPEZC28kdcItXfUpRLElpW7l65yZFjMy6mvM7EygKouic0867weHEQmyA0qnDeBFKh_ZRSyQUfXk9GIx61Uyv6P2dnSCbsSqV17yyPDSw9etwa32qdOkPdu59yBN2BZ44y3CkLipXuNJw9F2h-npLg2IhHCIWVYrAsgjYDsJ1q55F68OAZU8_1O6eN4dyiS3nyN7h2kiLoONuGdoFMJlb3eZVwKN6lCPJ",
-    },
-    {
-        id: 4,
-        title: "Lechones Pietrain x Landrace destete (Lote de 15)",
-        species: "Porcino",
-        age: "45 días",
-        location: "La Piedad, Michoac.",
-        price: 1450,
-        unit: "MXN / cabeza",
-        seller: "Granja San Miguel",
-        rating: "4.8",
-        deals: "42 tratos",
-        badge: "Disponible (15 cabezas)",
-        extra: "Desparasitados",
-        note: "Promedio 14 kg",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCccBumUL-sIajq4iFL9e5rgEsQMOy0MLk7sXxp2-M1PcIWx6J-AF0luzSBa6DYUB7OKgDkGgwtzbEa6BIEV-BrSek0gpihc_lsRPAdkVBRHokvpTOc8g_dhxpiEhE_SJCTt57L2wVVra117qkjMdHGO_QdwVgdPMZVjW266fjPT7SQwzO54OhjTXgBxy2Wv0BLrrVVmb9wxQ6oDftznP6LLFgZOtQlC6ect9Xo_BrFGzqCD5ib6uxH",
-    },
-    {
-        id: 5,
-        title: "Novillos de Engorda Brangus Rojo (Lote 12)",
-        species: "Bovino",
-        age: "14 meses",
-        location: "Navojoa, Sonora",
-        price: 22000,
-        unit: "MXN / cab.",
-        seller: "Corrales El Yaqui",
-        rating: "4.9",
-        deals: "19 tratos",
-        badge: "Disponible (12 cabezas)",
-        extra: "340 kg prom.",
-        note: "Hato Libre TB",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8G3jLfEY1ooBoACMN5ncWBZ8xH_tP1IjKiXExDy8RQaCV9QwCBFZXhAskacIgv20yJESe43iHR4AS8bLBLylwNWxdOX6WuT5hPy8cpdXjbNEOrrP-2VmdxicaI93r7VA0k_qnTV36rDDbTVe4E1nU2Id3weQ3K1EKNGuscmLW4GXjJfZMyopz36Ns0BE3x1f8Kpq9jYDJJvSV9TWqxiizygypowmalVj0V52MGW4YLkMFN5eNjTX",
-    },
-    {
-        id: 6,
-        title: "Borregas Pelibuey primer parto",
-        species: "Ovino",
-        age: "12 meses",
-        location: "Mérida, Yucatán",
-        price: 2800,
-        unit: "MXN / cab.",
-        seller: "Ovinos del Mayab",
-        rating: "4.7",
-        deals: "11 tratos",
-        badge: "Disponible (8 cabezas)",
-        extra: "Aptas Cría",
-        note: "Rústicas de trópico",
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1RZv39lDtTKLz2A_5QNHL3-2seF9mpy5-58HemidpS75VfBI8nF4ZNCoMV9-FFVWeoeaYF47oMQQeQa5LhfvhxnTuwISl812nQ5fhLEehqiQv5GZIB7rqLWrfTkbrZjIwblSBC_4ZQF_cuqHuOvbOkn3ZnqNSVXuos2ZzZsBcVR4qn_NMu--J7ehaaiygQKpK9mBjHp_tFO_Mc676ntBILxGiZQgYvteXS4Ajxyq-Uvt9VOf3LABC",
-    },
-];
+const MIN_PRICE = 0;
+const MAX_PRICE = 100000;
+
+// Precio por cabeza para filtrar y ordenar (si no se puede calcular, el precio capturado).
+const headPrice = (lot: LotDetail) => pricing(lot).perHead ?? lot.price;
 
 export default function UserHome() {
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const { lots, loading, error, reload } = useCatalog();
     const [profile, setProfile] = useState<LocalProfile | null>(() => loadProfile(user?.username));
     const [species, setSpecies] = useState("Todos");
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("recent");
-    const [minPrice, setMinPrice] = useState(1400);
-    const [maxPrice, setMaxPrice] = useState(48000);
+    const [minPrice, setMinPrice] = useState(MIN_PRICE);
+    const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
 
 
     useEffect(() => {
@@ -127,19 +39,20 @@ export default function UserHome() {
     const sellerMode = canSell(profile?.tradeMode);
     const buyerMode = canBuy(profile?.tradeMode);
 
-    const filteredAnimals = useMemo(() => {
-        let result = animals.filter((animal) => {
-            const matchesSpecies = species === "Todos" || animal.species === species;
-            const text = `${animal.title} ${animal.species} ${animal.location} ${animal.seller}`.toLowerCase();
+    const filteredLots = useMemo(() => {
+        let result = lots.filter((lot) => {
+            const matchesSpecies = species === "Todos" || lot.species === species;
+            const text = `${lot.title} ${lot.species} ${lot.breed} ${lot.municipality} ${lot.state} ${lot.seller.name}`.toLowerCase();
             const matchesSearch = text.includes(search.toLowerCase());
-            const matchesPrice = animal.price >= minPrice && animal.price <= maxPrice;
+            const price = headPrice(lot);
+            const matchesPrice = price >= minPrice && price <= maxPrice;
             return matchesSpecies && matchesSearch && matchesPrice;
         });
 
-        if (sort === "price-asc") result = [...result].sort((a, b) => a.price - b.price);
-        if (sort === "price-desc") result = [...result].sort((a, b) => b.price - a.price);
+        if (sort === "price-asc") result = [...result].sort((a, b) => headPrice(a) - headPrice(b));
+        if (sort === "price-desc") result = [...result].sort((a, b) => headPrice(b) - headPrice(a));
         return result;
-    }, [species, search, sort, minPrice, maxPrice]);
+    }, [lots, species, search, sort, minPrice, maxPrice]);
 
     return (
         <div className="market-page">
@@ -182,7 +95,7 @@ export default function UserHome() {
                     <aside className="filters-card">
                         <div className="filters-title-row">
                             <h2>☷ Filtros de búsqueda</h2>
-                            <button onClick={() => { setSpecies("Todos"); setSearch(""); setMinPrice(1400); setMaxPrice(48000); }}>↻ Limpiar filtros</button>
+                            <button onClick={() => { setSpecies("Todos"); setSearch(""); setMinPrice(MIN_PRICE); setMaxPrice(MAX_PRICE); }}>↻ Limpiar filtros</button>
                         </div>
 
                         <div className="filter-block">
@@ -206,7 +119,7 @@ export default function UserHome() {
 
                         <div className="filter-block">
                             <div className="price-heading"><label>PRECIO / CABEZA (MXN)</label><span>${minPrice.toLocaleString()} - ${maxPrice.toLocaleString()}</span></div>
-                            <input className="range" type="range" min="1000" max="60000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+                            <input className="range" type="range" min={MIN_PRICE} max={MAX_PRICE} step="500" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
                             <div className="price-inputs">
                                 <div><small>Min ($)</small><input type="number" value={minPrice} onChange={(e) => setMinPrice(Number(e.target.value))}/></div>
                                 <div><small>Máx ($)</small><input type="number" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))}/></div>
@@ -227,7 +140,7 @@ export default function UserHome() {
 
                     <section className="results-panel">
                         <div className="results-banner">
-                            <div><h1>Mostrando 124 animales disponibles ✓</h1><p>Precios actualizados en tiempo real y trato directo sin intermediarios</p></div>
+                            <div><h1>Mostrando {filteredLots.length} lotes disponibles ✓</h1><p>Precios actualizados en tiempo real y trato directo sin intermediarios</p></div>
                             <div className="market-ticker"><small>NOVILLO EN PIE (PROMEDIO)</small><strong>$54.20 MXN / kg ↗</strong></div>
                         </div>
 
@@ -236,29 +149,21 @@ export default function UserHome() {
                             <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="recent">Ordenar: Recientes</option><option value="price-asc">Precio: menor a mayor</option><option value="price-desc">Precio: mayor a menor</option></select>
                         </div>
 
+                        {error && (
+                            <div className="catalog-message">
+                                No se pudieron cargar los lotes publicados: {error} <button onClick={() => reload()}>Reintentar</button>
+                            </div>
+                        )}
+                        {loading && <div className="catalog-message">Cargando lotes publicados…</div>}
+
                         <div className="animal-grid">
-                            {filteredAnimals.map((animal) => (
-                                <article className="animal-card" key={animal.id}>
-                                    <div className="animal-photo">
-                                        <img src={animal.image} alt={animal.title} />
-                                        <span className={`availability ${animal.badge === "Reservada" ? "reserved" : ""}`}>{animal.badge}</span>
-                                        <span className="extra-badge">{animal.extra}</span>
-                                        {animal.note && <span className="photo-note">{animal.note}</span>}
-                                    </div>
-                                    <div className="animal-body">
-                                        <div className="meta"><span>{animal.species}</span><b>•</b><span>{animal.age}</span><b>•</b><span>⌖ {animal.location}</span></div>
-                                        <h3>{animal.title}</h3>
-                                        <div className="price"><strong>${animal.price.toLocaleString()}</strong><span>{animal.unit}</span></div>
-                                        <div className="seller-row">
-                                            <div><strong>{animal.seller}</strong><small>{animal.rating ? `★ ${animal.rating} (${animal.deals})` : animal.deals}</small></div>
-                                            <button>{animal.badge === "Reservada" ? "Ver lote" : "Ver detalles"}</button>
-                                        </div>
-                                    </div>
-                                </article>
+                            {filteredLots.map((lot) => (
+                                <LotCard key={lot.id} lot={lot} onOpen={(item) => navigate(`/user/lote/${item.id}`)} />
                             ))}
                         </div>
+                        {!loading && filteredLots.length === 0 && <div className="catalog-message">No hay lotes con esos filtros.</div>}
 
-                        <div className="pagination"><span>Mostrando 1 - {filteredAnimals.length} de 124 lotes en venta</span><div><button>‹</button><button className="active">1</button><button>2</button><button>3</button><span>...</span><button>12</button><button>Siguiente ›</button></div></div>
+                        <div className="pagination"><span>Mostrando 1 - {filteredLots.length} de {lots.length} lotes en venta</span><div><button>‹</button><button className="active">1</button><button>2</button><button>3</button><span>...</span><button>12</button><button>Siguiente ›</button></div></div>
                     </section>
                 </div>
             </main>
