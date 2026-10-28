@@ -46,3 +46,10 @@
     .required-action-card { align-items: stretch; flex-direction: column; }
 }
 .verified-input input:not([readonly]) { background: #fff; color: #121c2a; padding-right: 13px; }
+
+.phone-help {
+    color: #59635b;
+    font-size: 12px;
+    font-weight: 400;
+}
+

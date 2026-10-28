@@ -96,6 +96,10 @@ export default function ProfileSetupPage() {
       setError('Completa nombre, apellidos, teléfono, correo, municipio, estado, género y domicilio para continuar.')
       return
     }
+    if (!/^\d{10}$/.test(phone)) { //verifica la cantidad de caracteres del numero de telefono
+      setError('El número de teléfono debe contener exactamente 10 dígitos.')
+      return
+    }
 
     setSaving(true)
     const saved = persistProfile()
@@ -187,7 +191,25 @@ export default function ProfileSetupPage() {
             <div className="form-grid two-cols">
               <Field label="Nombre(s) *"><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ej. Ana" /></Field>
               <Field label="Apellidos *"><input required value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Apellidos" /></Field>
-              <Field label="Teléfono de contacto *"><input required value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="(646) 000 0000" /></Field>
+
+              <Field label="Teléfono de contacto *">
+                <input
+                    required
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={phone}
+                    onChange={(e) =>
+                        setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))
+                    }
+                    placeholder="6461234567"
+                />
+
+                <small className="phone-help">
+                  El teléfono debe contener exactamente 10 dígitos ({phone.length}/10).
+                </small>
+              </Field>
+
               <Field label="Género *">
                 <select required value={gender} onChange={(e) => setGender(e.target.value as Gender)}>
                   <option value="" disabled>Selecciona una opción</option>

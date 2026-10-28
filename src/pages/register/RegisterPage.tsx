@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      await register(cleanUsername, password)
+      await register(cleanUsername, password, cleanEmail)
       savePendingRegistration({ username: cleanUsername, email: cleanEmail })
       await login(cleanUsername, password)
       navigate('/user/profile-setup')

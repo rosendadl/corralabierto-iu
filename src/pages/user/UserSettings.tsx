@@ -68,6 +68,10 @@ export default function UserSettings() {
       setError('Nombre, apellidos, teléfono, municipio, estado, género y domicilio son obligatorios.')
       return
     }
+    if (!/^\d{10}$/.test(safeProfile.phone.trim())) {
+      setError('El número de teléfono debe contener exactamente 10 dígitos.')
+      return
+    }
 
     saveProfile({
       ...safeProfile,
@@ -156,7 +160,23 @@ export default function UserSettings() {
                 </label>
                 <label className="settings-field">
                   <span>Teléfono *</span>
-                  <input required type="tel" value={safeProfile.phone} onChange={(e) => update('phone', e.target.value)} />
+                  <input
+                      required
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={safeProfile.phone}
+                      onChange={(e) =>
+                          update('phone', e.target.value.replace(/\D/g, '').slice(0, 10))
+                      }
+                  />
+                  <small className="field-help">
+                    {safeProfile.phone.length === 10
+                        ? 'Límite de 10 dígitos alcanzado.'
+                        : `El teléfono debe tener 10 dígitos (${safeProfile.phone.length}/10).`}
+                  </small>
+
+
                 </label>
                 <label className="settings-field">
                   <span>Género *</span>
