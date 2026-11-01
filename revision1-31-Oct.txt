@@ -1,0 +1,44 @@
+1. Archivos sueltos en `/src`
+   Varios archivos deberían moverse a carpetas según su responsabilidad:
+   - `types.ts` y `lotDetails.ts` → `src/types/` o `src/models/`
+   - `api.ts` → `src/services/` o `src/api/`
+   - `useCatalog.ts` → `src/hooks/`
+   - `catalogData.ts` → `src/data/` o `src/mocks/`
+   - `profileStore.ts` y `publicationStore.ts` → `src/context/` o `src/stores/`
+
+2. Componentes huérfanos
+   `src/components/Profile.tsx` y `src/components/Layout.tsx` no se utilizan en ninguna
+   ruta de `App.tsx` ni en otros componentes. Se recomienda eliminarlos o integrarlos
+   para evitar confusión en el equipo.
+
+3. Manejo de estado global con `localStorage` y eventos del DOM
+   `profileStore.ts` y `publicationStore.ts` implementan un sistema propio basado en
+   `localStorage` y eventos del DOM (`window.dispatchEvent(new Event('...'))` y
+   `window.addEventListener(...)` dentro de `useEffect` en múltiples componentes).
+   Por ahora es aceptable, ya que aún no hemos visto otras formas de hacerlo en React,
+   pero en proyectos futuros sería mejor usar React Context.
+
+4. Exceso de `useState` en formularios
+   Páginas como `ProfileSetupPage.tsx`, `PublishLotPage.tsx` y `UserSettings.tsx`
+   usan entre 12 y 15 hooks `useState` independientes, uno por cada campo del formulario.
+   Sugerencia de mejora:
+   - Agrupar el estado del formulario en un solo objeto:
+     const [formData, setFormData] = useState({ firstName: '', lastName: '', ... });
+   - Crear un manejador genérico:
+     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+       const { name, value } = e.target;
+       setFormData(prev => ({ ...prev, [name]: value }));
+     };
+
+5. Riesgo al almacenar imágenes en `localStorage`
+   En `ProfileSetupPage.tsx`, las fotos de perfil se leen como Data URL (Base64) de hasta
+   900 KB y se guardan directamente en `localStorage`.
+   Advertencia: `localStorage` tiene un límite de aproximadamente 5 MB por dominio.
+   Guardar 4 o 5 imágenes llenará la cuota del navegador y provocará un error
+   `QuotaExceededError`.
+
+6. Subida de imágenes incompleta en `PublishLotPage.tsx`
+   En la línea 94 solo se envían los nombres de los archivos
+   (`photoNames: photos.map(f => f.name)`). No se envían los archivos reales
+   (vía `FormData` / multipart) ni se muestran previsualizaciones de las fotos
+   seleccionadas al usuario.
