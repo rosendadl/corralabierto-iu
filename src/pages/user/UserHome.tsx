@@ -166,6 +166,15 @@ export default function UserHome() {
                         <div className="pagination"><span>Mostrando 1 - {filteredLots.length} de {lots.length} lotes en venta</span><div><button>‹</button><button className="active">1</button><button>2</button><button>3</button><span>...</span><button>12</button><button>Siguiente ›</button></div></div>
                     </section>
                 </div>
+                {/* Easter egg: solo usuarios con sesión iniciada */}
+                <section className="corral-oscuro-entry" aria-label="Acceso secreto a Corral Oscuro">
+                    <div>
+                        <span className="corral-oscuro-eyebrow">ZONA CLANDESTINA · EASTER EGG</span>
+                        <h2>¿Te atreves a entrar al Corral Oscuro?</h2>
+                        <p>La sección secreta de Corral Abierto. Acceso disponible con tu sesión actual.</p>
+                    </div>
+                    <Link className="corral-oscuro-entry-button" to="/user/corral-oscuro">☠ Entrar al Corral Oscuro →</Link>
+                </section>
             </main>
 
             <footer className="market-footer">

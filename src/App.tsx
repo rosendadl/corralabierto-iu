@@ -9,6 +9,7 @@ import UserPublications from './pages/user/UserPublications.tsx'
 import PublishLotPage from './pages/user/PublishLotPage.tsx'
 import UserSectionPage from './pages/user/UserSectionPage.tsx'
 import ProfileSetupPage from './pages/user/ProfileSetupPage.tsx'
+import CorralOscuroPage from './pages/user/CorralOscuroPage.tsx'
 import LotDetailPage from './pages/lot/LotDetailPage.tsx'
 
 import AdminLayout from './pages/admin/AdminLayout.tsx'
@@ -36,6 +37,7 @@ export default function App() {
                     <Route path="/user/settings" element={<UserSettings />} />
                     <Route path="/user/publicaciones" element={<UserPublications />} />
                     <Route path="/user/publicar" element={<PublishLotPage />} />
+          <Route path="/user/corral-oscuro" element={<CorralOscuroPage />} />
                     <Route path="/user/lote/:id" element={<LotDetailPage />} />
                     <Route path="/user/ventas" element={<Navigate to="/user/publicaciones#ventas" replace />} />
                     <Route
